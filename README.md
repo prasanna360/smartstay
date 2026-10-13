@@ -9,12 +9,6 @@ of the factors behind it.
 > occupancy, comparable rates, and booking pace are not live. This is an
 > illustrative prototype, not pricing advice.
 
-## Try the live app
-
-**[Open SmartStay](YOUR_VERCEL_URL)**
-
-Replace `YOUR_VERCEL_URL` with the deployment URL from Vercel after deploying.
-
 ## Features
 
 - Single-night benchmark with an explanation and factor-by-factor breakdown.
@@ -40,48 +34,6 @@ The demo multiplies the base nightly rate by seven hand-tuned factors:
 
 Minimum and maximum guardrails optionally clamp the final recommendation.
 These transparent rules are not a trained forecasting model.
-
-## Deploy on Vercel
-
-1. Push this repository to GitHub.
-2. In [Vercel](https://vercel.com/), choose **Add New → Project** and import
-   the GitHub repository.
-3. Keep the detected **Next.js** framework preset and root directory.
-4. Choose **Deploy**. The default build command is `npm run build`; no
-   environment variables are required.
-5. Copy the deployment URL into the **Try the live app** link above and the
-   GitHub repository's **About → Website** field.
-
-The deployed Next.js app runs the demo pricing calculations in the browser.
-The Python engine remains in the repository as a standalone implementation
-and reference; Vercel does not need to run a separate Python server.
-
-## Run locally
-
-Requirements: Node.js 20.9 or newer.
-
-```bash
-npm install
-npm run dev
-```
-
-Open the local URL printed by Next.js, normally `http://localhost:3000`.
-
-The Python reference engine can also be run as a Streamlit app with Python
-dependencies installed:
-
-```bash
-python -m pip install -r requirements.txt
-python -m streamlit run app.py
-```
-
-## Tests
-
-The Python engine's regression tests use only the Python standard library:
-
-```bash
-python tests/test_pricing_engine.py
-```
 
 ## Project structure
 
