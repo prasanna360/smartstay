@@ -103,3 +103,6 @@ smartstay/
 There are no live data feeds, booking integrations, user accounts, or
 persistent storage. Rates are illustrative benchmarks generated from sample
 and synthetic inputs.
+
+This is an independent project and is not affiliated with or
+endorsed by any pricing platform.
