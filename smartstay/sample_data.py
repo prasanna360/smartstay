@@ -25,7 +25,6 @@ Sources (accessed Sep 2026, AirROI STR market reports unless noted):
 - Munnar, KL:     median ADR ~$53-72/night
 """
 
-import hashlib
 from datetime import date
 
 # 2BR base rate is anchored to each city's researched median nightly rate
@@ -47,6 +46,16 @@ CITY_BASE_PRICES = {
 }
 
 
+def _stable_hash(value: str) -> int:
+    """Return the same deterministic 32-bit hash used by the web demo."""
+    result = 2166136261
+    encoded = value.encode("utf-16-le")
+    for index in range(0, len(encoded), 2):
+        code_unit = encoded[index] | (encoded[index + 1] << 8)
+        result = ((result ^ code_unit) * 16777619) & 0xFFFFFFFF
+    return result
+
+
 def get_base_price(city: str, bedrooms: int) -> float:
     prices = CITY_BASE_PRICES.get(city, CITY_BASE_PRICES["Goa"])
     if bedrooms in prices:
@@ -66,7 +75,7 @@ def synthetic_market_occupancy(city: str, target_date: date) -> float:
     is not sourced from actual bookings.
     """
     seed_str = f"{city}-{target_date.isoformat()}"
-    seed_val = int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % 1000
+    seed_val = _stable_hash(seed_str) % 1000
     base = 35 + (seed_val / 1000) * 45  # base range ~35-80
 
     if target_date.weekday() in (4, 5):
@@ -80,7 +89,7 @@ def synthetic_market_occupancy(city: str, target_date: date) -> float:
 def synthetic_competitor_rate(city: str, bedrooms: int, target_date: date) -> float:
     """Return a deterministic demo average rate for comparable listings."""
     base = get_base_price(city, bedrooms)
-    seed = int(hashlib.md5(f"comp-{city}-{target_date.isoformat()}".encode()).hexdigest(), 16) % 21
+    seed = _stable_hash(f"comp-{city}-{target_date.isoformat()}") % 21
     market_factor = 0.90 + seed / 100
     if target_date.weekday() in (4, 5):
         market_factor += 0.05
@@ -89,7 +98,7 @@ def synthetic_competitor_rate(city: str, bedrooms: int, target_date: date) -> fl
 
 def synthetic_booking_pace(city: str, target_date: date) -> float:
     """Return demo booking speed as a percentage of the expected pace."""
-    seed = int(hashlib.md5(f"pace-{city}-{target_date.isoformat()}".encode()).hexdigest(), 16) % 61
+    seed = _stable_hash(f"pace-{city}-{target_date.isoformat()}") % 61
     pace = 40 + seed
     if target_date.weekday() in (4, 5):
         pace += 10

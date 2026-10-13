@@ -2,3 +2,8 @@ __pycache__/
 *.pyc
 .streamlit/
 .venv/
+node_modules/
+.next/
+out/
+.vercel/
+npm-debug.log*
